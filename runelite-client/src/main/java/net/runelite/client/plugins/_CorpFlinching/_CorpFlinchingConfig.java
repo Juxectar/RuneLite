@@ -8,23 +8,25 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("__testplugin")
 
 public interface _CorpFlinchingConfig extends Config {
+
 	@ConfigItem(
-			keyName = "numbers",
-			name = "animation id",
-			description = "",
+			keyName = "Stomp counter",
+			name = "Stomp Counter",
+			description = "Keeps track of the 7 tick stomp cycle",
 			position = 1
 	)
-	default int numbers() {
-		return 1;
+	default boolean stompCounter() {
+		return false;
 	}
 
 	@ConfigItem(
-			keyName = "numbers",
-			name = "reset graphics",
-			description = "",
-			position = 1
+			keyName = "Flinch Counter",
+			name = "Flinch Counter",
+			description = "Keeps track of the flinch cycle",
+			position = 2
 	)
-	default boolean graphicss() {
+	default boolean flinchCounter() {
 		return false;
 	}
+
 }

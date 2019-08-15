@@ -1,6 +1,7 @@
 package net.runelite.client.plugins._CorpFlinching;
 
 
+import ch.qos.logback.classic.pattern.SyslogStartConverter;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import net.runelite.api.*;
@@ -14,19 +15,16 @@ import net.runelite.client.ui.overlay.OverlayManager;
 
 import java.util.*;
 
-@PluginDescriptor(name = "__TestPlugin")
+@PluginDescriptor(name = "__CorpFlinchPlugin")
 public class _CorpFlinchingPlugin extends Plugin {
-	Random rand = new Random();
 	@Inject
 	Client client;
 	@Inject
-	private _CorpFlinchingConfig testpluginConfig;
+	private _CorpFlinchingConfig corpFlinchConfig;
 	@Inject
-	private _CorpFlinchingOverlay testpluginOverlay;
+	private _CorpFlinchingOverlay corpFlinchingOverlay;
 	@Inject
 	private OverlayManager overlayManager;
-	@Inject
-	private ItemManager itemManager;
 
 	@Provides
 	_CorpFlinchingConfig getConfig(ConfigManager configManager) {
@@ -41,39 +39,52 @@ public class _CorpFlinchingPlugin extends Plugin {
 
 	@Subscribe
 	public void onGameTick(GameTick tick) {
+		if (corpFlinchingOverlay.corphasstomped && corpFlinchingOverlay.stompcounter<=5){
+			corpFlinchingOverlay.stompcounter++;
+		}else{
+			corpFlinchingOverlay.stompcounter=0;
+		}
+			corpFlinchingOverlay.hitcounter++;
 
-
-
-	}
-
-	@Subscribe
-	public void onItemSpawned(ItemSpawned item) {
-		System.out.println(itemManager.getItemPrice(item.getItem().getId()));
-
-
-
-	}
-
-	@Subscribe
-	public void onMenuEntryAdded(MenuEntryAdded menuEntry){
-
+		System.out.println("hitcounter: "+corpFlinchingOverlay.hitcounter+" stompcounter: "+corpFlinchingOverlay.stompcounter);
+		if (corpFlinchingOverlay.hitcounter == 1 && corpFlinchingOverlay.stompcounter == 6){
+			corpFlinchingOverlay.hitcounter--;
+		}
 
 	}
 	@Subscribe
-	public void onItemDespawned(ItemDespawned itemDespawned) {
+	public void onAnimationChanged(AnimationChanged event){
+		if (event.getActor().getAnimation() == 1686){
+			corpFlinchingOverlay.corphasstomped = true;
+			corpFlinchingOverlay.stompcounter=0;
+			System.out.println("corp stomped");
 
-
+		}
 	}
+	@Subscribe
+	public void onHitsplatApplied(HitsplatApplied hit){
+		System.out.println("actor: "+ hit.getActor().getName());
+
+		if (hit.getActor().getName().equals("Corporeal Beast")){
+			corpFlinchingOverlay.hitcounter=0;
+
+		}
+		System.out.println(corpFlinchingOverlay.hitcounter+ " "+ corpFlinchingOverlay.stompcounter);
+	}
+
+
+
+
 
 	@Override
 	protected void startUp() throws Exception {
 		System.out.println("nemjef start");
-		overlayManager.add(testpluginOverlay);
+		overlayManager.add(corpFlinchingOverlay);
 	}
 
 	@Override
 	protected void shutDown() throws Exception {
 		System.out.println("end");
-		overlayManager.remove(testpluginOverlay);
+		overlayManager.remove(corpFlinchingOverlay);
 	}
 }

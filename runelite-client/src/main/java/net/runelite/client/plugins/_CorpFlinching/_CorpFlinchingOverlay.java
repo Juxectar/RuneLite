@@ -1,6 +1,10 @@
 package net.runelite.client.plugins._CorpFlinching;
 
+import javafx.animation.Animation;
 import net.runelite.api.*;
+import net.runelite.api.Point;
+import net.runelite.api.events.AnimationChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemSpawned;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
@@ -11,8 +15,9 @@ import java.awt.*;
 
 public class _CorpFlinchingOverlay extends Overlay {
 
-	int counter = 0;
-	private int itemid = 0;
+	boolean corphasstomped;
+	int stompcounter = 0;
+	int hitcounter;
 	private _CorpFlinchingConfig config;
 	@Inject
 	private Client client;
@@ -27,34 +32,25 @@ public class _CorpFlinchingOverlay extends Overlay {
 		setPriority(OverlayPriority.MED);
 	}
 
-	int animationloop=0;
 	@Override
 	public Dimension render(Graphics2D graphics) {
 
-		if (config.graphicss()) {
-			OverlayUtil.renderPolygon(graphics, client.getLocalPlayer().getCanvasTilePoly(), Color.RED);
-
-
-
-			for (Player p : client.getPlayers()){
-				for (int i: p.getPlayerComposition().getEquipmentIds()){
-				}
-
-
-
+		if (config.stompCounter()) {
+			if (corphasstomped) {
+				if (stompcounter == 0) {
+					OverlayUtil.renderTextLocation(graphics, new Point(250, 40), "Corp cycle: " + "1 STOMP", Color.ORANGE);
+				} else
+					OverlayUtil.renderTextLocation(graphics, new Point(250, 40), "Corp cycle: " + (stompcounter + 1), Color.ORANGE);
 			}
+		}
 
+		if (hitcounter <= 10) {
+			if (hitcounter == 8)
+				OverlayUtil.renderTextLocation(graphics, new Point(250, 60), "Retaliate delay: " + (hitcounter+ "CLICK"), Color.ORANGE);
+
+			OverlayUtil.renderTextLocation(graphics, new Point(250, 60), "Retaliate delay: " + (hitcounter), Color.ORANGE);
 		}
-		if (!config.graphicss()) {
-			counter = 0;
-		}
+
 		return null;
-	}
-
-
-	@Subscribe
-	public void onItemSpawned(ItemSpawned item) {
-		System.out.println(itemManager.getItemPrice(item.getItem().getId()));
-
 	}
 }
