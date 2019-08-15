@@ -24,6 +24,7 @@ public class _CorpFlinchingOverlay extends Overlay {
 	@Inject
 	private ItemManager itemManager;
 
+
 	@Inject
 	public _CorpFlinchingOverlay(_CorpFlinchingConfig config) {
 		this.config = config;
@@ -35,6 +36,7 @@ public class _CorpFlinchingOverlay extends Overlay {
 	@Override
 	public Dimension render(Graphics2D graphics) {
 
+
 		if (config.stompCounter()) {
 			if (corphasstomped) {
 				if (stompcounter == 0) {
@@ -44,11 +46,14 @@ public class _CorpFlinchingOverlay extends Overlay {
 			}
 		}
 
-		if (hitcounter <= 10) {
-			if (hitcounter == 8)
-				OverlayUtil.renderTextLocation(graphics, new Point(250, 60), "Retaliate delay: " + (hitcounter+ "CLICK"), Color.ORANGE);
+		if (config.flinchCounter()) {
+			if (hitcounter <= 10) {
 
-			OverlayUtil.renderTextLocation(graphics, new Point(250, 60), "Retaliate delay: " + (hitcounter), Color.ORANGE);
+				if (hitcounter == 8)
+					OverlayUtil.renderTextLocation(graphics, new Point(250, 60), "Retaliate delay: " + (hitcounter + "CLICK"), Color.ORANGE);
+
+				OverlayUtil.renderTextLocation(graphics, new Point(250, 60), "Retaliate delay: " + (hitcounter), Color.ORANGE);
+			}
 		}
 
 		return null;
