@@ -101,6 +101,6 @@ public interface BoostsConfig extends Config
 	)
 	default int boostThreshold()
 	{
-		return 0;
+		return 1;
 	}
 }

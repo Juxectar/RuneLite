@@ -50,7 +50,6 @@ public class _CorpFlinchingPlugin extends Plugin {
 		}
 		corpFlinchingOverlay.hitcounter++;
 
-		System.out.println("hitcounter: " + corpFlinchingOverlay.hitcounter + " stompcounter: " + corpFlinchingOverlay.stompcounter);
 		if (corpFlinchingOverlay.hitcounter == 1 && corpFlinchingOverlay.stompcounter == 6) {
 			corpFlinchingOverlay.hitcounter--;
 		}
